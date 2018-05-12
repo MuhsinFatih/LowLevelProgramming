@@ -1,0 +1,28 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "buildCurrent_cpp_File",
+            "identifier": "buildCurrent_cpp_File",
+            "type": "shell",
+            "command": "g++ -std=c++11 '${file}' -o debug.out -g",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "buildCurrent_c_File",
+            "identifier": "buildCurrent_c_File",
+            "type": "shell",
+            "command": "gcc '${file}' -o debug.out -g",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+        }
+
+    ]
+}

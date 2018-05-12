@@ -1,0 +1,67 @@
+	.section	__TEXT,__text,regular,pure_instructions
+	.macosx_version_min 10, 13
+	.globl	_swap                   ## -- Begin function swap
+	.p2align	4, 0x90
+_swap:                                  ## @swap
+	.cfi_startproc
+## BB#0:
+	pushq	%rbp
+Lcfi0:
+	.cfi_def_cfa_offset 16
+Lcfi1:
+	.cfi_offset %rbp, -16
+	movq	%rsp, %rbp
+Lcfi2:
+	.cfi_def_cfa_register %rbp
+	movq	%rdi, -8(%rbp)
+	movq	%rsi, -16(%rbp)
+	movq	-8(%rbp), %rsi
+	movl	(%rsi), %eax
+	movl	%eax, -20(%rbp)
+	movq	-16(%rbp), %rsi
+	movl	(%rsi), %eax
+	movl	%eax, -24(%rbp)
+	movl	-24(%rbp), %eax
+	movq	-8(%rbp), %rsi
+	movl	%eax, (%rsi)
+	movl	-20(%rbp), %eax
+	movq	-16(%rbp), %rsi
+	movl	%eax, (%rsi)
+	popq	%rbp
+	retq
+	.cfi_endproc
+                                        ## -- End function
+	.globl	_main                   ## -- Begin function main
+	.p2align	4, 0x90
+_main:                                  ## @main
+	.cfi_startproc
+## BB#0:
+	pushq	%rbp
+Lcfi3:
+	.cfi_def_cfa_offset 16
+Lcfi4:
+	.cfi_offset %rbp, -16
+	movq	%rsp, %rbp
+Lcfi5:
+	.cfi_def_cfa_register %rbp
+	leaq	_zip1(%rip), %rdi
+	leaq	_zip2(%rip), %rsi
+	callq	_swap
+	xorl	%eax, %eax
+	popq	%rbp
+	retq
+	.cfi_endproc
+                                        ## -- End function
+	.section	__DATA,__data
+	.globl	_zip1                   ## @zip1
+	.p2align	2
+_zip1:
+	.long	3                       ## 0x3
+
+	.globl	_zip2                   ## @zip2
+	.p2align	2
+_zip2:
+	.long	2                       ## 0x2
+
+
+.subsections_via_symbols
