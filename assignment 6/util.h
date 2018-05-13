@@ -2,7 +2,7 @@
 #define true 1
 #define false 0
 #include <stdbool.h>
-
+#include <time.h>
 
 
 bool is_stringAlphaNumeric(char *str);
@@ -29,3 +29,30 @@ bool isValidAccessNetID(char *accessNet);
  * @retval returns true (1) if name is valid
  */
 bool isValidName(char *name);
+
+/** 
+ * @brief  construct full name using name array and surname
+ * @param  buffer: address to write full name
+ * @param  **name: name (*char[2])
+ * @param  surname: surname (*char)
+ * @retval None
+ */
+void makeFullName(char * tuid, char * buffer, char **name, char * surname);
+
+void printStudentInfo(char * fullname, char * preferred_name, char * tuid, char * accessNetId);
+
+/** 
+ * @brief  get time in YYYYMMDD format
+ * @note   
+ * @retval time as string (YYMMDD)
+ */
+char * getTimeAsString();
+
+
+/** 
+ * @brief  get size of any array. Assumes the array is null terminated
+ * @param  anyting: an array of any type
+ * @param  typeSize: size of one item in the array
+ * @retval size of array
+ */
+// size_t get_size(void * anything);

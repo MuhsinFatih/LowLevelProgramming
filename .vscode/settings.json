@@ -22,6 +22,9 @@
         "stdbool.h": "c",
         "db_helper.h": "c",
         "ostream": "c",
-        "functional": "c"
+        "functional": "c",
+        "__functional_03": "c",
+        "locale": "c",
+        "typeinfo": "c"
     }
 }

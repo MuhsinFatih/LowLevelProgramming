@@ -1,4 +1,4 @@
 SRC=$(wildcard *.c)
 
 debug.out: $(SRC)
-	gcc -o $@ $^ -g
+	gcc -o $@ $^ -g -O0

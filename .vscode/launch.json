@@ -57,7 +57,7 @@
         "cwd": "${fileDirname}",
         "environment": [],
         "externalConsole": true,
-        "MIMode": "lldb",
+        "MIMode": "gdb",
         "preLaunchTask": "make",
         "internalConsoleOptions": "openOnSessionStart" // this may need to be copied in user settings as well
       },

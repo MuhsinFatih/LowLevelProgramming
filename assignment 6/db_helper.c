@@ -29,7 +29,7 @@ int getNumColumns(char * data, char delimiter) {
         count += (*(data++) == delimiter);
     }
 
-    printf ("Count of Columns: %d\n", count);
+    // printf ("Count of Columns: %d\n", count);
     return count;
 }
 
@@ -68,7 +68,7 @@ int getNumRows(FILE *fp) {
 
   fseek(fp, 0, SEEK_SET);
 
-  printf ("Count of Rows (includes header row, if there is one): %d\n", count);
+  // printf ("Count of Rows (includes header row, if there is one): %d\n", count);
   return count;
 }
 
@@ -215,26 +215,26 @@ char ** getValue(char * dbTable, char * searchStr,
     /* Copy the current line that has been read into tempLine */
     strcpy(tempLine, line);
 
-    printf("\nline: %s\n", line);
-    printf("tempLine: %s\n", tempLine);
+    // printf("\nline: %s\n", line);
+    // printf("tempLine: %s\n", tempLine);
     
     /* Separate the delimited string that is the current line, and
        while the current token does not equal NULL and we have not
        found what we are looking for... */
     while((temp = strsep(&line,"#")) != NULL) {
-      printf("currCol: %d; temp: %s\n", currCol, temp);
+      // printf("currCol: %d; temp: %s\n", currCol, temp);
       
       if (!searchFound && currCol < numCols) {     
 	/* If the current column is the column that we have been asked
 	   to search, ...*/
 	if (currCol == colSearch) {
-	  printf("searchStr: %s; temp: %s\n", searchStr, temp);
+	  // printf("searchStr: %s; temp: %s\n", searchStr, temp);
 	  /* Compare the string we are searching for to the current
 	     token. If they are equal set searchFound to TRUE
 	     (i.e. 1). Otherwise, set to FALSE (i.e. 0). */
 	  int comp = strcmp(temp, searchStr);
 	  searchFound = (strcmp(temp, searchStr) == 0);
-	  printf("searchFound: %d\n", searchFound);
+	  // printf("searchFound: %d\n", searchFound);
 	}
       }
 	/* Increment the index of the current column and then go back

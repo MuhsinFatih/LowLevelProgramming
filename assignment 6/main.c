@@ -4,7 +4,7 @@
 #include "db_helper.h"
 #include <stdbool.h>
 #include "util.h"
-
+#include <time.h>
 /***************************************************************************
   Instructions:
      1. You can choose either 1a or 1b. You do not to need to do both,
@@ -123,37 +123,106 @@
 ***************************************************************************/
 int main(int argc, char **argv)
 {
-
-	printf("%i\n", isValidTUID("912086676"));
-	return 0;
+	// printf("%i\n", isValidTUID("912086676"));
+	// return 0;
 	/* The code below is one example of how you might write tests. I've
      also included it to demonstrate how to use the getValue function. */
 	// char **val = getValue("resources_roles", "19", 1, 0);
 	char * tuid; int id_size = 0;
 	char * accessNetId;
-	puts("Enter the student tuid or accessnet id:\n");
+	char * name[2];
+	char * surname;
+	char * fullname;
+	char * preferred_name;
+	bool * expiryList;
+	puts("Enter your tuid or accessnet ID:\n");
 	getline(&tuid, &id_size, stdin);
 	id_size = strlen(tuid);
-	// if(is_string)
+	if(tuid[id_size-1] == '\n') tuid[id_size-1] = 0; // apparently getline function includes the newline character from stdin
+	// determine tuid and accessnet id
+	if(!is_stringNumeric(tuid)) {
+		accessNetId = malloc(id_size);
+		strcpy(accessNetId,tuid);
+		if(!isValidAccessNetID(accessNetId)) die("invalid id!\n");
+		tuid = getValue("person_ids", accessNetId, 1,0)[0];
+	} else {
+		if(!isValidTUID(tuid)) die("invalid id!\n");
+		accessNetId = getValue("person_ids", tuid, 0, 1)[0];
+	}
+
+	preferred_name = getValue("person_names",tuid, 0,4)[0];
+	makeFullName(tuid, fullname, name, surname);
+	printStudentInfo(fullname, preferred_name, tuid, accessNetId);
+
+	char **role_ids = getValue("person_roles", tuid, 0, 1);
+	char **role_expiration_dates = getValue("person_roles", tuid, 0, 2);
+	size_t role_size = -1; while(role_ids[++role_size] != '\0');
 	
-	if(tuid[tuid_size-1] == '\n') tuid[tuid_size-1] = 0; // apparently getline function includes the newline character from stdin
-	char **val = getValue("person_ids",tuid,0,1);
-	printf("tuid:%s\n", tuid);
-	printf("student access code is: %s\n", val[0]);
-	int index = 0;
-	if (val != NULL)
+	// get roles
+	expiryList = (bool*) malloc(role_size * sizeof(bool));
+	size_t i = 0;
+	while(role_ids[i] != NULL) {
+		expiryList[i] = getTimeAsString() > role_expiration_dates[i];
+		++i;
+	}
+	char **role_names = (char**) malloc(role_size * sizeof(char*) + 1);
+	printf("%s, you are:\n", preferred_name);
+	for(i = 0;i < role_size;i++)
 	{
-		while (1)
-		{
-			printf("val[%d]: %s\n", index, val[index]);
-			if (val[++index] == NULL)
-				break;
+		role_names[i] = getValue("roles",role_ids[i],0,1)[0];
+		printf("\t%s\n", (role_names[i]));
+	}
+
+	// get resources
+	char **resources = (char**) malloc(role_size * sizeof(char*) + 1);
+	for(i = 0;i < role_size;i++)
+	{
+		resources[i] = "\0";
+	}
+	size_t r = 0;
+	for(i = 0;i < role_size;i++)
+	{
+		char * role = role_ids[i];
+		char ** newresource = getValue("resources_roles", role,1,0);
+		int j = -1;
+		while(newresource[++j] != '\0') {
+			printf("newresource: \t%s\n", newresource[j]);
+			int k = -1;
+			bool flag = true;
+			while(resources[++k] != '\0') {
+				if(!strcmp(resources[k], newresource[j])) {
+					printf("resources[k]: \t\t%s\n", resources[k]);
+					flag = false;
+					break;
+				}
+			}
+			if(flag) {
+				resources[r++] = newresource[j];
+				flag = true;
+				printf("\t\t\t%s\n", newresource[j]);
+			}
 		}
 	}
+	i = -1;
+	while(resources[++i] != "\0"){
+		printf("r  %s\n", resources[i]);
+	}
+	
+
+	// int index = 0;
+	// if (val != NULL)
+	// {
+	// 	while (1)
+	// 	{
+	// 		printf("val[%d]: %s\n", index, val[index]);
+	// 		if (val[++index] == NULL)
+	// 			break;
+	// 	}
+	// }
 	/* This demonstrates how to use the newRole function, which is
      implemented in db_helper.c (declared in db_helper.h). */
 	char *str = "student";
-	Role *role = newRole(atoi(val[0]), "student");
+	// Role *role = newRole(atoi(val[0]), "student");
 	printf("Constructed the role \"object\" for the role, student.\n");
-	return 1;
+	return 0;
 }
