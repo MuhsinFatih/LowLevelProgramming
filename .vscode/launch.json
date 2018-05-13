@@ -42,6 +42,26 @@
         "internalConsoleOptions": "openOnSessionStart" // this may need to be copied in user settings as well
       },
       {
+        // MacOS makefile
+        "name": "makefile",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "${fileDirname}/debug.out",
+        "args": [
+          "4",
+          "3",
+          "2",
+          "1"
+        ],
+        "stopAtEntry": false,
+        "cwd": "${fileDirname}",
+        "environment": [],
+        "externalConsole": true,
+        "MIMode": "lldb",
+        "preLaunchTask": "make",
+        "internalConsoleOptions": "openOnSessionStart" // this may need to be copied in user settings as well
+      },
+      {
         // Linux
         "name": "(gdb) Launch",
         "type": "cppdbg",

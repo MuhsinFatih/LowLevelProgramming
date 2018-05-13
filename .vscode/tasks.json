@@ -22,6 +22,16 @@
                 "kind": "build",
                 "isDefault": true
             },
+        },
+        {
+            "label": "make",
+            "identifier": "make",
+            "type": "shell",
+            "command": "cd '${fileDirname}' && pwd && make",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
         }
 
     ]

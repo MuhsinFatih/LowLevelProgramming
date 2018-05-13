@@ -18,6 +18,10 @@
         "utility": "c",
         "__locale": "c",
         "ios": "c",
-        "__string": "c"
+        "__string": "c",
+        "stdbool.h": "c",
+        "db_helper.h": "c",
+        "ostream": "c",
+        "functional": "c"
     }
 }
