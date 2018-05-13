@@ -123,18 +123,13 @@
 ***************************************************************************/
 int main(int argc, char **argv)
 {
-	// printf("%i\n", isValidTUID("912086676"));
-	// return 0;
-	/* The code below is one example of how you might write tests. I've
-     also included it to demonstrate how to use the getValue function. */
-	// char **val = getValue("resources_roles", "19", 1, 0);
+	
 	char * tuid; int id_size = 0;
 	char * accessNetId;
 	char * name[2];
 	char * surname;
 	char * fullname;
 	char * preferred_name;
-	bool * expiryList;
 	puts("Enter your tuid or accessnet ID:\n");
 	getline(&tuid, &id_size, stdin);
 	id_size = strlen(tuid);
@@ -154,19 +149,13 @@ int main(int argc, char **argv)
 	makeFullName(tuid, fullname, name, surname);
 	printStudentInfo(fullname, preferred_name, tuid, accessNetId);
 
-	char **role_ids = getValue("person_roles", tuid, 0, 1);
-	char **role_expiration_dates = getValue("person_roles", tuid, 0, 2);
-	size_t role_size = -1; while(role_ids[++role_size] != '\0');
-	
-	// get roles
-	expiryList = (bool*) malloc(role_size * sizeof(bool));
-	size_t i = 0;
-	while(role_ids[i] != NULL) {
-		expiryList[i] = getTimeAsString() > role_expiration_dates[i];
-		++i;
-	}
+	char ** role_ids = get_role_ids(tuid);
+
+	int role_size = -1; while(role_ids[++role_size] != '\0');
+
 	char **role_names = (char**) malloc(role_size * sizeof(char*) + 1);
 	printf("%s, you are:\n", preferred_name);
+	int i;
 	for(i = 0;i < role_size;i++)
 	{
 		role_names[i] = getValue("roles",role_ids[i],0,1)[0];
@@ -174,34 +163,12 @@ int main(int argc, char **argv)
 	}
 
 	// get resources
-	char **resources = (char**) malloc(role_size * sizeof(char*) + 1);
-	for(i = 0;i < role_size + 1;++i){ resources[i] = '\0'; }
-	size_t r = 0;
-	for(i = 0;i < role_size;i++)
-	{
-		char * role = role_ids[i];
-		char ** newresource = getValue("resources_roles", role,1,0);
-		int j = -1;
-		while(newresource[++j] != '\0') {
-			int k = -1;
-			bool flag = true;
-			while(resources[++k] != '\0') {
-				if(!strcmp(resources[k], newresource[j])) {
-					flag = false;
-					break;
-				}
-			}
-			if(flag) {
-				resources[r++] = newresource[j];
-				flag = true;
-			}
-		}
-	}
+	char **resources = get_resources(role_size, role_ids);
 	char *txt = malloc(255);
 	printf("You have access to:\n");
 	// get resource names
-	char ** resource_names = malloc(r * sizeof(char*));
-	for(i = 0;i < r + 1;i++) resource_names[i] = '\0';
+	char ** resource_names = malloc(role_size * sizeof(char*));
+	for(i = 0;i < role_size + 1;i++) resource_names[i] = '\0';
 	i = -1;
 	while(resources[++i] != '\0'){
 		resource_names[i] = getValue("resources",resources[i],0,1)[0];
@@ -210,8 +177,11 @@ int main(int argc, char **argv)
 		strcat(txt, resources[i]);
 	}
 	
-	logToFile("logfile.log", tuid, txt);
+	char* filename = "logfile.log";
+	if(logToFile(filename, tuid, txt)) {
+		printf("Saved permissions in %s\n", filename);
+	} else printf("There was a problem with the file. Make sure no other program is using the file and that file is not read-only\n");
 
-	
+	printf("I am not sure why, but although code runs successfully, sometimes it gives a segfault after the exit function. Code has finished\n");
 	return 0;
 }

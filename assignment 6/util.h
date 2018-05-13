@@ -66,3 +66,14 @@ char * getTimeAsString();
  * @retval 
  */
 bool logToFile(char * filename, char * tuid, char * resource_ids);
+
+/** 
+ * @brief  return role ids
+ * @note   
+ * @param  tuid: 
+ * @retval returns new pointer for role_ids
+ */
+char **get_role_ids(char* tuid);
+
+
+char** get_resources(int *role_size, char** role_ids);

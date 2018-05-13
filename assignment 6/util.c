@@ -53,7 +53,7 @@ void printStudentInfo(char * fullname, char * preferred_name, char * tuid, char 
 
 
 char * getTimeAsString() {
-    char datename[32];
+    char *datename = malloc(9);
 	struct tm* to;
 	time_t t;
 	t = time(NULL);
@@ -62,18 +62,66 @@ char * getTimeAsString() {
 	return datename;
 }
 
-int get_resources(char ** resources, char ** role_ids) {
-
-}
 
 bool logToFile(char * filename, char * tuid, char * txt) {
     FILE *f = fopen(filename, "w+");
-
+    if(f==NULL) return false;
     fprintf(f, "%s has access to:%s\n", tuid, txt);
     fclose(f);
+    return true;
 }
 
+char** get_role_ids(char* tuid) {
 
+    char **bad_role_ids = getValue("person_roles", tuid, 0, 1);
+    char **role_expiration_dates = getValue("person_roles", tuid, 0, 2);
+	size_t role_size = -1; while(bad_role_ids[++role_size] != '\0');
+    char** role_ids = (char**) malloc(role_size);
+
+	bool * expiryList = (bool*) malloc(role_size * sizeof(bool));
+	size_t i = 0;
+	size_t c = 0;
+	char *a = getTimeAsString();
+	int t = atoi(a);
+	while(bad_role_ids[i] != '\0') {
+		puts(bad_role_ids[i]);
+		expiryList[i] = t > atoi(role_expiration_dates[i]);
+		if(expiryList[i]) {
+            role_ids[c++] = bad_role_ids[i];
+        }
+		++i;
+	}
+    role_ids[c] = '\0';
+    return role_ids;
+}
+char** get_resources(int *role_size, char** role_ids) {
+    int i;
+    char **resources = (char**) malloc((int)role_size * sizeof(char*) + 1);
+	for(i = 0;i < (int)role_size + 1;++i){ resources[i] = '\0'; }
+	size_t r = 0;
+	for(i = 0;i < (int)role_size;i++)
+	{
+		char * role = role_ids[i];
+		char ** newresource = getValue("resources_roles", role,1,0);
+		int j = -1;
+		while(newresource[++j] != '\0') {
+			int k = -1;
+			bool flag = true;
+			while(resources[++k] != '\0') {
+				if(!strcmp(resources[k], newresource[j])) {
+					flag = false;
+					break;
+				}
+			}
+			if(flag) {
+				resources[r++] = newresource[j];
+				flag = true;
+			}
+		}
+	}
+    role_size = r;
+    return resources;
+}
 // size_t get_size(void * anything, size_t typeSize) {
 //     size_t i = 0;
 //     void* newaddr = anything;

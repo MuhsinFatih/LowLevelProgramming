@@ -25,6 +25,9 @@
         "functional": "c",
         "__functional_03": "c",
         "locale": "c",
-        "typeinfo": "c"
+        "typeinfo": "c",
+        "istream": "c",
+        "__config": "c",
+        "system_error": "c"
     }
 }
