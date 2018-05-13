@@ -1,6 +1,8 @@
 #include "db_helper.h"
 #include "util.h"
 #include <ctype.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 bool is_stringAlphaNumeric(char *str) {
     do{
@@ -63,6 +65,20 @@ char * getTimeAsString() {
 int get_resources(char ** resources, char ** role_ids) {
 
 }
+
+bool logToFile(char * filename, char * tuid, char * resource_ids) {
+    FILE *f = fopen(filename, "w+");
+    char *txt;
+    int i = -1;
+    char *r;
+    while(resource_ids[++i] != NULL) {
+        sprintf(r, "%s %s", r, resource_ids);
+    }
+    sprintf(txt, "%s has access to:%s\n", tuid, r);
+    fputs(txt, f);
+    fclose(f);
+}
+
 
 // size_t get_size(void * anything, size_t typeSize) {
 //     size_t i = 0;

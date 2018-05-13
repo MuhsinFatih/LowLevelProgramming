@@ -56,3 +56,13 @@ char * getTimeAsString();
  * @retval size of array
  */
 // size_t get_size(void * anything);
+
+/** 
+ * @brief  log tuid and resource id's to given file
+ * @note   
+ * @param  filename: file name relative to workspace path
+ * @param  tuid: tuid of the person
+ * @param  resource_ids: resources the person has access to
+ * @retval 
+ */
+bool logToFile(char * filename, char * tuid, char * resource_ids);

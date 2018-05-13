@@ -186,12 +186,10 @@ int main(int argc, char **argv)
 		char ** newresource = getValue("resources_roles", role,1,0);
 		int j = -1;
 		while(newresource[++j] != '\0') {
-			printf("newresource: \t%s\n", newresource[j]);
 			int k = -1;
 			bool flag = true;
 			while(resources[++k] != '\0') {
 				if(!strcmp(resources[k], newresource[j])) {
-					printf("resources[k]: \t\t%s\n", resources[k]);
 					flag = false;
 					break;
 				}
@@ -199,15 +197,20 @@ int main(int argc, char **argv)
 			if(flag) {
 				resources[r++] = newresource[j];
 				flag = true;
-				printf("\t\t\t%s\n", newresource[j]);
 			}
 		}
 	}
+
+	printf("You have access to:\n");
+	// get resource names
+	char ** resource_names = malloc(r * sizeof(char*));
 	i = -1;
 	while(resources[++i] != "\0"){
-		printf("r  %s\n", resources[i]);
+		resource_names[i] = getValue("resources",resources[i],0,1)[0];
+		puts(resource_names[i]);
 	}
 	
+	logToFile("logfile.log", tuid, resources);
 
 	// int index = 0;
 	// if (val != NULL)
