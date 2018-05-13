@@ -175,10 +175,7 @@ int main(int argc, char **argv)
 
 	// get resources
 	char **resources = (char**) malloc(role_size * sizeof(char*) + 1);
-	for(i = 0;i < role_size;i++)
-	{
-		resources[i] = "\0";
-	}
+	for(i = 0;i < role_size + 1;++i){ resources[i] = '\0'; }
 	size_t r = 0;
 	for(i = 0;i < role_size;i++)
 	{
@@ -200,32 +197,21 @@ int main(int argc, char **argv)
 			}
 		}
 	}
-
+	char *txt = malloc(255);
 	printf("You have access to:\n");
 	// get resource names
 	char ** resource_names = malloc(r * sizeof(char*));
+	for(i = 0;i < r + 1;i++) resource_names[i] = '\0';
 	i = -1;
-	while(resources[++i] != "\0"){
+	while(resources[++i] != '\0'){
 		resource_names[i] = getValue("resources",resources[i],0,1)[0];
 		puts(resource_names[i]);
+		strcat(txt, " ");
+		strcat(txt, resources[i]);
 	}
 	
-	logToFile("logfile.log", tuid, resources);
+	logToFile("logfile.log", tuid, txt);
 
-	// int index = 0;
-	// if (val != NULL)
-	// {
-	// 	while (1)
-	// 	{
-	// 		printf("val[%d]: %s\n", index, val[index]);
-	// 		if (val[++index] == NULL)
-	// 			break;
-	// 	}
-	// }
-	/* This demonstrates how to use the newRole function, which is
-     implemented in db_helper.c (declared in db_helper.h). */
-	char *str = "student";
-	// Role *role = newRole(atoi(val[0]), "student");
-	printf("Constructed the role \"object\" for the role, student.\n");
+	
 	return 0;
 }

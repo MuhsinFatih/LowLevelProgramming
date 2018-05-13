@@ -66,16 +66,10 @@ int get_resources(char ** resources, char ** role_ids) {
 
 }
 
-bool logToFile(char * filename, char * tuid, char * resource_ids) {
+bool logToFile(char * filename, char * tuid, char * txt) {
     FILE *f = fopen(filename, "w+");
-    char *txt;
-    int i = -1;
-    char *r;
-    while(resource_ids[++i] != NULL) {
-        sprintf(r, "%s %s", r, resource_ids);
-    }
-    sprintf(txt, "%s has access to:%s\n", tuid, r);
-    fputs(txt, f);
+
+    fprintf(f, "%s has access to:%s\n", tuid, txt);
     fclose(f);
 }
 
